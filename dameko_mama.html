@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:title" content="ダメ子ママ | Spoon配信">
+<meta property="og:description" content="雑談・企画系Spoonストリーマー。おかまバーへようこそ。">
+<title>ダメ子ママ | Spoon配信</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #0a0608;
+  --deep: #110b0f;
+  --pink: #ff2d78;
+  --pink-soft: #ff6fa8;
+  --pink-dim: rgba(255,45,120,0.15);
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --white: #fdf0f5;
+  --muted: rgba(253,240,245,0.55);
+  --glass: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,45,120,0.2);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── PARTICLE CANVAS ── */
+#particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── AMBIENT ── */
+body::before {
+  content:'';
+  position:fixed; top:-20%; left:-10%;
+  width:60vw; height:60vw;
+  background:radial-gradient(circle,rgba(255,45,120,0.1) 0%,transparent 65%);
+  pointer-events:none; z-index:0;
+}
+body::after {
+  content:'';
+  position:fixed; bottom:-20%; right:-10%;
+  width:50vw; height:50vw;
+  background:radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 65%);
+  pointer-events:none; z-index:0;
+}
+
+/* ── BGM BUTTON ── */
+#bgm-btn {
+  position: fixed;
+  bottom: 1.4rem;
+  right: 1.4rem;
+  z-index: 100;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: rgba(10,6,8,0.85);
+  backdrop-filter: blur(10px);
+  color: var(--pink-soft);
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(255,45,120,0.3);
+  transition: box-shadow 0.3s, transform 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+#bgm-btn:hover { box-shadow: 0 0 30px rgba(255,45,120,0.5); transform: scale(1.08); }
+#bgm-btn.playing { animation: pulse-ring 2s ease-in-out infinite; }
+@keyframes pulse-ring {
+  0%,100% { box-shadow: 0 0 18px rgba(255,45,120,0.3); }
+  50% { box-shadow: 0 0 35px rgba(255,45,120,0.6), 0 0 60px rgba(255,45,120,0.15); }
+}
+
+/* ── HERO ── */
+.hero {
+  position:relative;
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+.hero-bg {
+  position:absolute; inset:0;
+  background:
+    linear-gradient(160deg,rgba(255,45,120,0.08) 0%,transparent 50%),
+    linear-gradient(to bottom,transparent 40%,var(--black) 100%);
+  z-index:1;
+}
+.hero-bg::after {
+  content:'';
+  position:absolute; inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px);
+  opacity:0.4;
+}
+.hero-image {
+  position:absolute; inset:0;
+  background:url('dameko.png') center/cover no-repeat;
+  opacity:0.35;
+  filter:saturate(1.4) contrast(1.1);
+}
+.hero-content {
+  position:relative; z-index:2;
+  text-align:center; padding:2rem 1.2rem;
+  width:100%;
+}
+.neon-label {
+  display:inline-block;
+  font-family:'Playfair Display',serif; font-style:italic;
+  font-size:clamp(0.65rem,1.5vw,0.9rem);
+  letter-spacing:0.35em;
+  color:var(--pink-soft);
+  text-shadow:0 0 10px var(--pink),0 0 30px var(--pink);
+  margin-bottom:1.2rem;
+  animation:flicker 4s infinite;
+}
+@keyframes flicker {
+  0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:0.6} 94%{opacity:1} 96%{opacity:0.8} 97%{opacity:1}
+}
+.hero-name {
+  font-family:'Noto Serif JP',serif; font-weight:900;
+  font-size:clamp(3rem,12vw,7rem);
+  line-height:1; letter-spacing:-0.02em;
+  background:linear-gradient(135deg,var(--white) 30%,var(--pink-soft) 70%,var(--gold-light) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  filter:drop-shadow(0 0 20px rgba(255,45,120,0.5));
+  margin-bottom:0.6rem;
+}
+.hero-en {
+  font-family:'Playfair Display',serif; font-style:italic;
+  font-size:clamp(0.9rem,2.5vw,1.6rem);
+  color:var(--gold); letter-spacing:0.15em;
+  margin-bottom:2rem; opacity:0.85;
+}
+.hero-tags {
+  display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;
+  margin-bottom:2.5rem;
+}
+.tag {
+  padding:0.28rem 0.9rem;
+  border:1px solid var(--glass-border);
+  background:var(--glass); backdrop-filter:blur(8px);
+  border-radius:100px;
+  font-size:0.72rem; letter-spacing:0.12em;
+  color:var(--pink-soft);
+}
+.hero-cta {
+  display:inline-flex; align-items:center; gap:0.5rem;
+  padding:0.85rem 2rem;
+  background:linear-gradient(135deg,var(--pink) 0%,#c4005c 100%);
+  color:#fff; text-decoration:none;
+  font-size:0.85rem; letter-spacing:0.12em;
+  border-radius:100px;
+  box-shadow:0 0 25px rgba(255,45,120,0.45),0 4px 15px rgba(0,0,0,0.4);
+  transition:box-shadow 0.3s,transform 0.2s;
+  font-weight:500;
+}
+.hero-cta:hover { box-shadow:0 0 45px rgba(255,45,120,0.7),0 4px 20px rgba(0,0,0,0.5); transform:translateY(-2px); }
+
+.scroll-hint {
+  position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
+  z-index:2; display:flex; flex-direction:column; align-items:center; gap:0.4rem;
+  color:var(--muted); font-size:0.62rem; letter-spacing:0.2em;
+}
+.scroll-line {
+  width:1px; height:40px;
+  background:linear-gradient(to bottom,var(--pink),transparent);
+  animation:scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%,100%{opacity:0.4;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.1)}
+}
+
+/* ── SECTIONS ── */
+section {
+  position:relative; z-index:1;
+  max-width:860px; margin:0 auto;
+  padding:4.5rem 1.2rem;
+}
+.section-label {
+  font-family:'Playfair Display',serif; font-style:italic;
+  font-size:0.72rem; letter-spacing:0.35em;
+  color:var(--pink); text-transform:uppercase;
+  margin-bottom:0.8rem;
+  text-shadow:0 0 12px rgba(255,45,120,0.5);
+}
+.section-title {
+  font-family:'Noto Serif JP',serif; font-weight:700;
+  font-size:clamp(1.4rem,4vw,2.2rem);
+  margin-bottom:2rem; color:var(--white);
+}
+
+/* ── ABOUT ── */
+.about-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.2rem;
+}
+.about-avatar { grid-row:span 2; }
+.avatar-frame {
+  width:100%; aspect-ratio:3/4;
+  border-radius:12px; overflow:hidden;
+  border:1px solid var(--glass-border);
+  box-shadow:0 0 40px rgba(255,45,120,0.2),inset 0 0 30px rgba(0,0,0,0.3);
+  position:relative;
+}
+.avatar-frame img { width:100%; height:100%; object-fit:cover; filter:saturate(1.2); }
+.avatar-name-plate {
+  position:absolute; bottom:0; left:0; right:0;
+  padding:1.2rem 1rem 1rem;
+  background:linear-gradient(to top,rgba(10,6,8,0.95) 60%,transparent);
+  text-align:center;
+}
+.glass-card {
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(12px);
+  border-radius:12px; padding:1.3rem;
+}
+.card-title {
+  font-size:0.68rem; letter-spacing:0.25em;
+  color:var(--gold); margin-bottom:0.7rem; font-weight:500;
+}
+.card-body { font-size:0.875rem; line-height:1.9; color:var(--muted); }
+.info-row {
+  display:flex; align-items:baseline; gap:0.6rem;
+  padding:0.5rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  font-size:0.85rem;
+}
+.info-row:last-child { border-bottom:none; }
+.info-key { font-size:0.65rem; letter-spacing:0.12em; color:var(--pink-soft); min-width:64px; font-weight:500; }
+.info-val { color:var(--muted); }
+
+.divider {
+  width:100%; height:1px;
+  background:linear-gradient(to right,transparent,var(--pink-dim),transparent);
+  position:relative; z-index:1;
+}
+
+/* ── GENRE ── */
+.genre-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1rem;
+}
+.genre-card {
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:12px; padding:1.4rem 1rem;
+  text-align:center;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+.genre-card:hover { border-color:var(--pink); box-shadow:0 0 20px rgba(255,45,120,0.2); }
+.genre-icon { font-size:1.8rem; margin-bottom:0.5rem; display:block; }
+.genre-name { font-family:'Noto Serif JP',serif; font-size:0.95rem; font-weight:700; margin-bottom:0.35rem; color:var(--white); }
+.genre-desc { font-size:0.72rem; color:var(--muted); line-height:1.7; }
+
+/* ── MARSHMALLOW ── */
+.marshmallow-banner {
+  display:flex; align-items:center; gap:1.2rem;
+  padding:1.4rem 1.6rem;
+  background:linear-gradient(135deg,rgba(255,45,120,0.1),rgba(201,168,76,0.07));
+  border:1px solid var(--glass-border);
+  border-radius:14px;
+  text-decoration:none; color:var(--white);
+  transition:box-shadow 0.3s,transform 0.2s;
+  margin-bottom:2rem;
+}
+.marshmallow-banner:hover {
+  box-shadow:0 0 30px rgba(255,45,120,0.25);
+  transform:translateY(-2px);
+}
+.marshmallow-icon { font-size:2.2rem; flex-shrink:0; }
+.marshmallow-text .m-title { font-family:'Noto Serif JP',serif; font-weight:700; font-size:1rem; margin-bottom:0.25rem; }
+.marshmallow-text .m-desc { font-size:0.78rem; color:var(--muted); line-height:1.6; }
+.marshmallow-arrow { margin-left:auto; font-size:1.2rem; color:var(--pink-soft); flex-shrink:0; }
+
+/* ── PROPOSAL FORM ── */
+.form-tabs {
+  display:flex; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap;
+}
+.form-tab {
+  padding:0.45rem 1.1rem;
+  border:1px solid var(--glass-border);
+  background:var(--glass); backdrop-filter:blur(8px);
+  border-radius:100px;
+  font-size:0.78rem; color:var(--muted);
+  cursor:pointer; transition:all 0.2s;
+  font-family:'Noto Sans JP',sans-serif;
+}
+.form-tab.active, .form-tab:hover {
+  border-color:var(--pink); color:var(--pink-soft);
+  background:rgba(255,45,120,0.08);
+}
+
+.proposal-form {
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(12px);
+  border-radius:14px; padding:1.6rem;
+}
+.form-group { margin-bottom:1.1rem; }
+.form-label {
+  display:block; font-size:0.72rem; letter-spacing:0.15em;
+  color:var(--pink-soft); margin-bottom:0.4rem; font-weight:500;
+}
+.form-input, .form-textarea, .form-select {
+  width:100%;
+  background:rgba(0,0,0,0.3);
+  border:1px solid rgba(255,45,120,0.2);
+  border-radius:8px;
+  padding:0.7rem 0.9rem;
+  color:var(--white);
+  font-family:'Noto Sans JP',sans-serif;
+  font-size:0.875rem;
+  transition:border-color 0.2s;
+  outline:none;
+  -webkit-appearance:none;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  border-color:var(--pink);
+  box-shadow:0 0 12px rgba(255,45,120,0.15);
+}
+.form-textarea { min-height:100px; resize:vertical; line-height:1.7; }
+.form-select option { background:#1a0d14; color:var(--white); }
+
+.submit-btn {
+  width:100%;
+  padding:0.9rem;
+  background:linear-gradient(135deg,var(--pink),#c4005c);
+  border:none; border-radius:8px;
+  color:#fff; font-size:0.875rem; letter-spacing:0.12em;
+  cursor:pointer; font-family:'Noto Sans JP',sans-serif;
+  font-weight:500;
+  box-shadow:0 0 20px rgba(255,45,120,0.3);
+  transition:box-shadow 0.3s,transform 0.2s;
+}
+.submit-btn:hover { box-shadow:0 0 35px rgba(255,45,120,0.5); transform:translateY(-1px); }
+.submit-btn:active { transform:translateY(0); }
+
+.proposals-list { margin-top:1.5rem; }
+.proposals-list h4 {
+  font-size:0.7rem; letter-spacing:0.2em; color:var(--gold);
+  margin-bottom:0.8rem;
+}
+.proposal-item {
+  padding:0.9rem 1rem;
+  background:rgba(255,45,120,0.05);
+  border:1px solid rgba(255,45,120,0.1);
+  border-radius:8px; margin-bottom:0.6rem;
+  font-size:0.82rem; line-height:1.7;
+}
+.proposal-item .p-category {
+  font-size:0.65rem; color:var(--pink-soft); letter-spacing:0.1em;
+  margin-bottom:0.3rem; font-weight:500;
+}
+.proposal-item .p-content { color:var(--muted); }
+.proposal-item .p-date { font-size:0.62rem; color:rgba(253,240,245,0.3); margin-top:0.3rem; }
+
+/* ── SNS ── */
+.sns-links { display:flex; flex-direction:column; gap:0.7rem; }
+.sns-link {
+  display:flex; align-items:center; gap:1rem;
+  padding:1rem 1.3rem;
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:10px; text-decoration:none; color:var(--white);
+  transition:border-color 0.3s,box-shadow 0.3s,transform 0.2s;
+  font-size:0.875rem;
+}
+.sns-link:hover { border-color:var(--pink); box-shadow:0 0 18px rgba(255,45,120,0.2); transform:translateX(4px); }
+.sns-icon {
+  width:36px; height:36px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem; flex-shrink:0;
+}
+.sns-icon-spoon { background:linear-gradient(135deg,#ff2d78,#c4005c); }
+.sns-icon-x { background:#000; border:1px solid #333; }
+.sns-icon-mallow { background:linear-gradient(135deg,#ffb3cc,#ff6fa8); }
+.sns-label { font-size:0.65rem; color:var(--pink-soft); letter-spacing:0.1em; display:block; margin-bottom:0.1rem; }
+
+/* ── FOOTER ── */
+footer {
+  position:relative; z-index:1;
+  text-align:center; padding:3rem 1rem 2rem;
+  border-top:1px solid rgba(255,45,120,0.1);
+}
+.footer-name {
+  font-family:'Noto Serif JP',serif; font-weight:900; font-size:1.3rem;
+  background:linear-gradient(135deg,var(--pink-soft),var(--gold-light));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  filter:drop-shadow(0 0 8px rgba(255,45,120,0.3));
+  margin-bottom:0.5rem;
+}
+.footer-copy { font-size:0.68rem; color:var(--muted); letter-spacing:0.1em; }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; bottom:5rem; left:50%; transform:translateX(-50%) translateY(20px);
+  background:rgba(255,45,120,0.9); color:#fff;
+  padding:0.65rem 1.4rem; border-radius:100px;
+  font-size:0.8rem; letter-spacing:0.08em;
+  opacity:0; transition:opacity 0.3s,transform 0.3s;
+  z-index:200; pointer-events:none; white-space:nowrap;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ── FADE-IN ── */
+@keyframes fadeUp {
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.hero-content > * { animation:fadeUp 0.8s ease both; }
+.hero-content > *:nth-child(1){animation-delay:0.1s}
+.hero-content > *:nth-child(2){animation-delay:0.25s}
+.hero-content > *:nth-child(3){animation-delay:0.4s}
+.hero-content > *:nth-child(4){animation-delay:0.55s}
+.hero-content > *:nth-child(5){animation-delay:0.7s}
+
+/* ── MOBILE ── */
+@media(max-width:600px){
+  .about-grid { grid-template-columns:1fr; }
+  .about-avatar { grid-row:span 1; }
+  .avatar-frame { aspect-ratio:1/1; object-position:top; }
+  section { padding:3.5rem 1rem; }
+  .marshmallow-banner { flex-wrap:wrap; }
+  .marshmallow-arrow { display:none; }
+  .form-tabs { gap:0.4rem; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- BGM BUTTON -->
+<button id="bgm-btn" title="BGM ON/OFF">🎵</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-image"></div>
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <span class="neon-label">✦ Spoon Streamer ✦</span>
+    <h1 class="hero-name">ダメ子ママ</h1>
+    <p class="hero-en">Dameko Mama</p>
+    <div class="hero-tags">
+      <span class="tag">雑談</span>
+      <span class="tag">企画</span>
+      <span class="tag">OKAMA BAR</span>
+    </div>
+    <a href="https://www.spooncast.net/jp/profile/@spoonmegane" target="_blank" class="hero-cta">🎙 Spoonで聴く</a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>SCROLL</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section>
+  <p class="section-label">About</p>
+  <h2 class="section-title">ダメ子ママとは</h2>
+  <div class="about-grid">
+    <div class="about-avatar">
+      <div class="avatar-frame">
+        <img src="dameko.png" alt="ダメ子ママ">
+      </div>
+      <div class="avatar-name-plate">
+        <p style="font-family:'Noto Serif JP',serif;font-weight:700;font-size:1.05rem;color:var(--white);">ダメ子ママ</p>
+        <p style="font-size:0.7rem;color:var(--pink-soft);letter-spacing:0.1em;">@spoonmegane</p>
+      </div>
+    </div>
+    <div class="glass-card">
+      <p class="card-title">PROFILE</p>
+      <div class="card-body">
+        <p>Spoonで活動中のストリーマー。雑談・企画系の配信で、来てくれた人が思わず笑って、気づいたらまた来ちゃう空間を作るのが得意。</p>
+        <br>
+        <p>可愛くてクールで、ちょっとクセになる——それがダメ子ママ流。</p>
+      </div>
+    </div>
+    <div class="glass-card">
+      <p class="card-title">INFO</p>
+      <div class="info-row"><span class="info-key">活動</span><span class="info-val">Spoon配信</span></div>
+      <div class="info-row"><span class="info-key">ジャンル</span><span class="info-val">雑談 / 企画</span></div>
+      <div class="info-row"><span class="info-key">X</span><span class="info-val">@spoonmegane</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- GENRE -->
+<section>
+  <p class="section-label">Contents</p>
+  <h2 class="section-title">配信コンテンツ</h2>
+  <div class="genre-grid">
+    <div class="genre-card">
+      <span class="genre-icon">🍸</span>
+      <p class="genre-name">雑談配信</p>
+      <p class="genre-desc">日常のあれこれをゆる〜くトーク。気づいたら長居してしまう居心地の良さ。</p>
+    </div>
+    <div class="genre-card">
+      <span class="genre-icon">🎭</span>
+      <p class="genre-name">企画配信</p>
+      <p class="genre-desc">ちょっと変わった切り口のリスナー参加型企画。毎回予想外の展開が待ってる。</p>
+    </div>
+    <div class="genre-card">
+      <span class="genre-icon">✨</span>
+      <p class="genre-name">OKAMA BAR</p>
+      <p class="genre-desc">クールでゴージャスな世界観の特別配信。一夜限りのバーへようこそ。</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROPOSAL / MARSHMALLOW -->
+<section>
+  <p class="section-label">Send</p>
+  <h2 class="section-title">メッセージ・企画案</h2>
+
+  <!-- マシュマロ -->
+  <a href="https://marshmallow-qa.com/mpkb7fu7cjorers?t=Tbc7v0&utm_medium=url_text&utm_source=promotion" target="_blank" class="marshmallow-banner">
+    <span class="marshmallow-icon">🍬</span>
+    <div class="marshmallow-text">
+      <p class="m-title">マシュマロで匿名メッセージを送る</p>
+      <p class="m-desc">匿名でこっそり気持ちを届けよう。お返事は配信内でするかも…？</p>
+    </div>
+    <span class="marshmallow-arrow">→</span>
+  </a>
+
+  <!-- フォーム -->
+  <div class="form-tabs">
+    <button class="form-tab active" data-tab="okama">🍸 おかまバー企画</button>
+    <button class="form-tab" data-tab="general">🎭 一般企画案</button>
+  </div>
+
+  <div class="proposal-form">
+    <div id="tab-okama">
+      <div class="form-group">
+        <label class="form-label">OKAMA BARテーマ案</label>
+        <input type="text" class="form-input" id="okama-theme" placeholder="例：昭和歌謡ナイト、失恋カクテルBAR...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">やってほしいこと・雰囲気</label>
+        <textarea class="form-textarea" id="okama-detail" placeholder="衣装、トーク内容、コーナー案など自由に！"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ニックネーム（任意）</label>
+        <input type="text" class="form-input" id="okama-name" placeholder="匿名OK">
+      </div>
+    </div>
+    <div id="tab-general" style="display:none">
+      <div class="form-group">
+        <label class="form-label">企画カテゴリ</label>
+        <select class="form-select" id="general-cat">
+          <option value="quiz">クイズ・ゲーム系</option>
+          <option value="talk">トーク・相談系</option>
+          <option value="collab">コラボ系</option>
+          <option value="seasonal">季節・イベント系</option>
+          <option value="other">その他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">企画案の内容</label>
+        <textarea class="form-textarea" id="general-detail" placeholder="どんな企画？やり方、面白ポイントなど教えて！"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ニックネーム（任意）</label>
+        <input type="text" class="form-input" id="general-name" placeholder="匿名OK">
+      </div>
+    </div>
+    <button class="submit-btn" id="submit-btn">✉ 送信する</button>
+
+    <div class="proposals-list" id="proposals-list"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SNS -->
+<section>
+  <p class="section-label">Links</p>
+  <h2 class="section-title">SNS・配信リンク</h2>
+  <div class="sns-links">
+    <a href="https://www.spooncast.net/jp/profile/@spoonmegane" target="_blank" class="sns-link">
+      <div class="sns-icon sns-icon-spoon">🎙</div>
+      <div><span class="sns-label">SPOON</span>spooncast.net/@spoonmegane</div>
+    </a>
+    <a href="https://x.com/spoonmegane" target="_blank" class="sns-link">
+      <div class="sns-icon sns-icon-x" style="font-weight:700;font-size:0.9rem;">𝕏</div>
+      <div><span class="sns-label">X (TWITTER)</span>@spoonmegane</div>
+    </a>
+    <a href="https://marshmallow-qa.com/mpkb7fu7cjorers?t=Tbc7v0&utm_medium=url_text&utm_source=promotion" target="_blank" class="sns-link">
+      <div class="sns-icon sns-icon-mallow">🍬</div>
+      <div><span class="sns-label">MARSHMALLOW</span>匿名メッセージを送る</div>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p class="footer-name">ダメ子ママ</p>
+  <p class="footer-copy">© 2025 ダメ子ママ — Spoon Streamer</p>
+</footer>
+
+<script>
+/* ── PARTICLES ── */
+(function(){
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function rand(a,b){ return a + Math.random()*(b-a); }
+
+  class Particle {
+    constructor(){
+      this.reset();
+      this.y = rand(0, H);
+    }
+    reset(){
+      this.x = rand(0, W);
+      this.y = H + 10;
+      this.r = rand(1, 3);
+      this.speed = rand(0.3, 1.2);
+      this.alpha = rand(0.3, 0.9);
+      this.color = Math.random() > 0.5 ? '#ff2d78' : '#c9a84c';
+      this.drift = rand(-0.3, 0.3);
+      this.twinkle = rand(0, Math.PI*2);
+    }
+    update(){
+      this.y -= this.speed;
+      this.x += this.drift;
+      this.twinkle += 0.04;
+      this.currentAlpha = this.alpha * (0.7 + 0.3 * Math.sin(this.twinkle));
+      if(this.y < -10) this.reset();
+    }
+    draw(){
+      ctx.save();
+      ctx.globalAlpha = this.currentAlpha;
+      ctx.fillStyle = this.color;
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 6;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  for(let i=0; i<80; i++) particles.push(new Particle());
+
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{ p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* ── BGM：ジャズ・ラウンジ系ピアノ ── */
+let audioCtx = null, bgmNodes = [], bgmPlaying = false, pianoTimer = null;
+
+// ピアノ音：サイン波＋倍音でハンマーピアノ風
+function playNote(ctx, master, freq, when, dur, vel=0.18){
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0, when);
+  env.gain.linearRampToValueAtTime(vel, when + 0.008);
+  env.gain.exponentialRampToValueAtTime(vel * 0.35, when + 0.12);
+  env.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+  env.connect(master);
+
+  [1, 2, 3, 4.1].forEach((harm, i) => {
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq * harm;
+    g.gain.value = [1, 0.45, 0.2, 0.07][i];
+    osc.connect(g); g.connect(env);
+    osc.start(when);
+    osc.stop(when + dur + 0.05);
+    bgmNodes.push(osc);
+  });
+}
+
+function startBGM(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const master = audioCtx.createGain();
+  master.gain.setValueAtTime(0.22, audioCtx.currentTime);
+
+  // リバーブ風：コンボルバー代わりにディレイ+フィードバック
+  const delay = audioCtx.createDelay(2.0);
+  const fbGain = audioCtx.createGain();
+  const delayDry = audioCtx.createGain();
+  delay.delayTime.value = 0.38;
+  fbGain.gain.value = 0.38;
+  delayDry.gain.value = 0.28;
+  delay.connect(fbGain); fbGain.connect(delay);
+  delay.connect(delayDry); delayDry.connect(audioCtx.destination);
+  master.connect(delay);
+  master.connect(audioCtx.destination);
+  bgmNodes.push(master, delay, fbGain, delayDry);
+
+  // ベース：ウォーキングベース風
+  const bassNotes = [65.41, 73.42, 82.41, 87.31]; // C2 D2 E2 F2
+  let bassIdx = 0;
+  function scheduleBass(){
+    const now = audioCtx.currentTime;
+    const bassEnv = audioCtx.createGain();
+    bassEnv.gain.setValueAtTime(0, now);
+    bassEnv.gain.linearRampToValueAtTime(0.18, now + 0.02);
+    bassEnv.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
+    bassEnv.connect(audioCtx.destination);
+    const bassOsc = audioCtx.createOscillator();
+    bassOsc.type = 'triangle';
+    bassOsc.frequency.value = bassNotes[bassIdx % bassNotes.length];
+    bassOsc.connect(bassEnv);
+    bassOsc.start(now); bassOsc.stop(now + 0.6);
+    bgmNodes.push(bassOsc, bassEnv);
+    bassIdx++;
+  }
+
+  // Cm7 ジャズコード進行： Cm7 / Fm7 / G7 / Cm7
+  const chords = [
+    [261.63, 311.13, 369.99, 440.00],   // Cm7
+    [349.23, 415.30, 493.88, 587.33],   // Fm7
+    [392.00, 493.88, 587.33, 698.46],   // G7
+    [261.63, 311.13, 369.99, 466.16],   // Cm9
+  ];
+  // メロディライン（右手）
+  const melody = [
+    [523.25, 1.2], [466.16, 0.4], [493.88, 0.8],
+    [440.00, 1.2], [392.00, 0.8],
+    [349.23, 1.0], [369.99, 0.6], [392.00, 1.4],
+    [440.00, 0.6], [493.88, 0.6], [523.25, 1.6],
+  ];
+
+  let chordIdx = 0, melIdx = 0;
+  let chordTime = audioCtx.currentTime + 0.1;
+  let melTime = audioCtx.currentTime + 0.1;
+  const CHORD_DUR = 2.4;
+
+  function scheduleLoop(){
+    const lookahead = 0.6;
+    const now = audioCtx.currentTime;
+
+    // コード
+    while(chordTime < now + lookahead){
+      const ch = chords[chordIdx % chords.length];
+      ch.forEach(f => playNote(audioCtx, master, f, chordTime, CHORD_DUR * 0.85, 0.06));
+      scheduleBass();
+      chordTime += CHORD_DUR;
+      chordIdx++;
+    }
+
+    // メロディ
+    while(melTime < now + lookahead){
+      const [f, d] = melody[melIdx % melody.length];
+      playNote(audioCtx, master, f, melTime, d * 0.8, 0.13);
+      melTime += d * 0.52;
+      melIdx++;
+    }
+  }
+
+  scheduleLoop();
+  pianoTimer = setInterval(scheduleLoop, 250);
+  bgmNodes.push(master);
+}
+
+function stopBGM(){
+  if(pianoTimer){ clearInterval(pianoTimer); pianoTimer = null; }
+  bgmNodes.forEach(n => { try{ n.stop && n.stop(0); n.disconnect && n.disconnect(); }catch(e){} });
+  bgmNodes = [];
+  if(audioCtx){ audioCtx.close(); audioCtx = null; }
+}
+
+document.getElementById('bgm-btn').addEventListener('click', function(){
+  if(bgmPlaying){
+    stopBGM(); bgmPlaying = false;
+    this.textContent = '🎵';
+    this.classList.remove('playing');
+    showToast('BGM OFF');
+  } else {
+    startBGM(); bgmPlaying = true;
+    this.textContent = '🔊';
+    this.classList.add('playing');
+    showToast('BGM ON — Jazz Lounge');
+  }
+});
+
+/* ── TABS ── */
+document.querySelectorAll('.form-tab').forEach(btn => {
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.form-tab').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    const tab = this.dataset.tab;
+    document.getElementById('tab-okama').style.display = tab==='okama' ? '' : 'none';
+    document.getElementById('tab-general').style.display = tab==='general' ? '' : 'none';
+  });
+});
+
+/* ── FORM SUBMIT (2ステップ：プレビュー → 送信) ── */
+function getActiveTab(){
+  return document.querySelector('.form-tab.active').dataset.tab;
+}
+
+// プレビューモーダルをDOMに追加
+document.body.insertAdjacentHTML('beforeend', `
+<div id="preview-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);z-index:400;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:#110b0f;border:1px solid rgba(255,45,120,0.3);border-radius:16px;padding:1.8rem;width:min(420px,92vw);box-shadow:0 0 40px rgba(255,45,120,0.18);">
+    <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:0.7rem;letter-spacing:0.3em;color:var(--pink);margin-bottom:0.5rem;">PREVIEW</p>
+    <h3 style="font-family:'Noto Serif JP',serif;font-size:1rem;color:var(--white);margin-bottom:1.2rem;">送信内容の確認</h3>
+    <div id="preview-body" style="background:rgba(255,45,120,0.05);border:1px solid rgba(255,45,120,0.12);border-radius:10px;padding:1.1rem;margin-bottom:1.3rem;font-size:0.85rem;line-height:1.8;color:var(--muted);"></div>
+    <p style="font-size:0.72rem;color:rgba(253,240,245,0.35);margin-bottom:1.2rem;line-height:1.6;">※ 送信後はこのページで削除できます。内容を確認してから送信してください。</p>
+    <div style="display:flex;gap:0.7rem;">
+      <button id="preview-confirm" style="flex:1;padding:0.8rem;background:linear-gradient(135deg,var(--pink),#c4005c);border:none;border-radius:8px;color:#fff;font-family:'Noto Sans JP',sans-serif;font-size:0.85rem;cursor:pointer;letter-spacing:0.1em;font-weight:500;">✉ 送信する</button>
+      <button id="preview-back" style="padding:0.8rem 1.1rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:0.85rem;cursor:pointer;">← 戻る</button>
+    </div>
+  </div>
+</div>
+`);
+
+let pendingProposal = null;
+
+document.getElementById('submit-btn').addEventListener('click', function(){
+  const tab = getActiveTab();
+  let content = '', category = '', name = '';
+
+  if(tab === 'okama'){
+    const theme = document.getElementById('okama-theme').value.trim();
+    const detail = document.getElementById('okama-detail').value.trim();
+    name = document.getElementById('okama-name').value.trim() || '匿名';
+    if(!theme && !detail){ showToast('内容を入力してください'); return; }
+    content = theme ? `【テーマ】${theme}` + (detail ? `\n${detail}` : '') : detail;
+    category = 'OKAMA BAR企画';
+  } else {
+    const cat = document.getElementById('general-cat').value;
+    const detail = document.getElementById('general-detail').value.trim();
+    name = document.getElementById('general-name').value.trim() || '匿名';
+    if(!detail){ showToast('内容を入力してください'); return; }
+    const catLabel = {quiz:'クイズ・ゲーム',talk:'トーク・相談',collab:'コラボ',seasonal:'季節・イベント',other:'その他'}[cat];
+    content = detail; category = catLabel;
+  }
+
+  // プレビュー表示
+  pendingProposal = { category, content, name, date: new Date().toLocaleDateString('ja-JP') };
+  document.getElementById('preview-body').innerHTML =
+    `<p style="font-size:0.68rem;color:var(--pink-soft);letter-spacing:0.1em;margin-bottom:0.5rem;">${category} — ${name}</p>` +
+    `<p>${content.replace(/\n/g,'<br>')}</p>`;
+  document.getElementById('preview-overlay').style.display = 'flex';
+});
+
+document.getElementById('preview-back').addEventListener('click', ()=>{
+  document.getElementById('preview-overlay').style.display = 'none';
+  pendingProposal = null;
+});
+
+document.getElementById('preview-confirm').addEventListener('click', ()=>{
+  if(!pendingProposal) return;
+
+  // 送信者識別用トークン生成
+  const token = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  const item = { ...pendingProposal, token };
+
+  const proposals = JSON.parse(localStorage.getItem('dameko_proposals') || '[]');
+  proposals.unshift(item);
+  localStorage.setItem('dameko_proposals', JSON.stringify(proposals.slice(0,20)));
+
+  // 自分のトークン一覧を保存
+  const myTokens = JSON.parse(localStorage.getItem('dameko_my_tokens') || '[]');
+  myTokens.push(token);
+  localStorage.setItem('dameko_my_tokens', JSON.stringify(myTokens));
+
+  // フォームクリア
+  ['okama-theme','okama-detail','okama-name','general-detail','general-name'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.value='';
+  });
+
+  document.getElementById('preview-overlay').style.display = 'none';
+  pendingProposal = null;
+  renderProposals();
+  showToast('送信しました！ありがとう🍸');
+});
+
+window.deleteMine = function deleteMine(token){
+  if(!confirm('この投稿を削除しますか？')) return;
+  const proposals = JSON.parse(localStorage.getItem('dameko_proposals') || '[]');
+  const updated = proposals.filter(p => p.token !== token);
+  localStorage.setItem('dameko_proposals', JSON.stringify(updated));
+
+  const myTokens = JSON.parse(localStorage.getItem('dameko_my_tokens') || '[]');
+  localStorage.setItem('dameko_my_tokens', JSON.stringify(myTokens.filter(t=>t!==token)));
+
+  renderProposals();
+  showToast('削除しました');
+}
+
+function renderProposals(){
+  const proposals = JSON.parse(localStorage.getItem('dameko_proposals') || '[]');
+  const myTokens = JSON.parse(localStorage.getItem('dameko_my_tokens') || '[]');
+  const list = document.getElementById('proposals-list');
+  if(!proposals.length){ list.innerHTML=''; return; }
+
+  const mine = proposals.filter(p => myTokens.includes(p.token));
+
+  let html = `<p style="font-size:0.75rem;color:var(--muted);margin-top:0.8rem;letter-spacing:0.1em;">✦ ${proposals.length}件の企画案が届いています</p>`;
+
+  if(mine.length){
+    html += `<div style="margin-top:1rem;">
+      <p style="font-size:0.68rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:0.6rem;">あなたの投稿</p>
+      ${mine.map(p=>`
+        <div style="background:rgba(255,45,120,0.05);border:1px solid rgba(255,45,120,0.12);border-radius:8px;padding:0.85rem 1rem;margin-bottom:0.5rem;position:relative;">
+          <p style="font-size:0.65rem;color:var(--pink-soft);letter-spacing:0.1em;margin-bottom:0.3rem;">${p.category} — ${p.date}</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.7;padding-right:2.5rem;">${p.content.replace(/\n/g,'<br>')}</p>
+          <button onclick="deleteMine('${p.token}')"
+            style="position:absolute;top:0.6rem;right:0.7rem;background:rgba(255,45,120,0.12);border:1px solid rgba(255,45,120,0.2);border-radius:6px;color:var(--pink-soft);font-size:0.68rem;padding:0.2rem 0.5rem;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">削除</button>
+        </div>
+      `).join('')}
+    </div>`;
+  }
+
+  list.innerHTML = html;
+}
+renderProposals();
+
+/* ── TOAST ── */
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+/* ── ADMIN ── */
+const ADMIN_HASH = '7ef45737ddac485934ae911a6da811525324409b94e89cb6c67b066d7aaef772'; // 0811
+
+async function hashPW(pw){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// 管理ボタンをフッターに追加
+document.querySelector('footer').insertAdjacentHTML('beforeend',
+  `<button id="admin-open" style="margin-top:1.2rem;background:none;border:1px solid rgba(255,45,120,0.15);color:rgba(253,240,245,0.25);font-size:0.62rem;letter-spacing:0.2em;padding:0.35rem 0.9rem;border-radius:100px;cursor:pointer;font-family:inherit;transition:all 0.2s;" onmouseover="this.style.color='var(--pink-soft)';this.style.borderColor='var(--glass-border)'" onmouseout="this.style.color='rgba(253,240,245,0.25)';this.style.borderColor='rgba(255,45,120,0.15)'">管理</button>`
+);
+
+// モーダルHTML
+document.body.insertAdjacentHTML('beforeend', `
+<div id="admin-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:500;align-items:center;justify-content:center;">
+  <div id="admin-modal" style="background:#110b0f;border:1px solid var(--glass-border);border-radius:16px;padding:2rem 1.8rem;width:min(380px,90vw);box-shadow:0 0 40px rgba(255,45,120,0.2);">
+
+    <!-- PW画面 -->
+    <div id="admin-login">
+      <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:0.72rem;letter-spacing:0.3em;color:var(--pink);margin-bottom:0.6rem;">ADMIN</p>
+      <h3 style="font-family:'Noto Serif JP',serif;font-size:1.1rem;margin-bottom:1.4rem;color:var(--white);">管理者認証</h3>
+      <input type="password" id="admin-pw-input" placeholder="パスワードを入力"
+        style="width:100%;background:rgba(0,0,0,0.4);border:1px solid rgba(255,45,120,0.25);border-radius:8px;padding:0.75rem 1rem;color:var(--white);font-family:'Noto Sans JP',sans-serif;font-size:0.9rem;outline:none;margin-bottom:0.8rem;box-sizing:border-box;"
+        onkeydown="if(event.key==='Enter')document.getElementById('admin-login-btn').click()">
+      <p id="admin-err" style="color:var(--pink);font-size:0.75rem;min-height:1rem;margin-bottom:0.6rem;"></p>
+      <div style="display:flex;gap:0.7rem;">
+        <button id="admin-login-btn" style="flex:1;padding:0.75rem;background:linear-gradient(135deg,var(--pink),#c4005c);border:none;border-radius:8px;color:#fff;font-family:'Noto Sans JP',sans-serif;font-size:0.85rem;cursor:pointer;letter-spacing:0.1em;">確認する</button>
+        <button onclick="closeAdmin()" style="padding:0.75rem 1rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:0.85rem;cursor:pointer;">✕</button>
+      </div>
+    </div>
+
+    <!-- 管理画面 -->
+    <div id="admin-panel" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
+        <div>
+          <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:0.72rem;letter-spacing:0.3em;color:var(--pink);">ADMIN PANEL</p>
+          <h3 style="font-family:'Noto Serif JP',serif;font-size:1rem;color:var(--white);">企画案一覧</h3>
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+          <button onclick="clearAll()" style="padding:0.4rem 0.8rem;background:rgba(255,45,120,0.1);border:1px solid rgba(255,45,120,0.2);border-radius:6px;color:var(--pink-soft);font-size:0.7rem;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">全削除</button>
+          <button onclick="closeAdmin()" style="padding:0.4rem 0.8rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--muted);font-size:0.7rem;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">閉じる</button>
+        </div>
+      </div>
+      <div id="admin-list" style="max-height:60vh;overflow-y:auto;display:flex;flex-direction:column;gap:0.6rem;"></div>
+    </div>
+  </div>
+</div>
+`);
+
+document.getElementById('admin-open').addEventListener('click', ()=>{
+  document.getElementById('admin-overlay').style.display = 'flex';
+  document.getElementById('admin-pw-input').focus();
+});
+
+document.getElementById('admin-overlay').addEventListener('click', e=>{
+  if(e.target === document.getElementById('admin-overlay')) closeAdmin();
+});
+
+function closeAdmin(){
+  document.getElementById('admin-overlay').style.display = 'none';
+  document.getElementById('admin-login').style.display = '';
+  document.getElementById('admin-panel').style.display = 'none';
+  document.getElementById('admin-pw-input').value = '';
+  document.getElementById('admin-err').textContent = '';
+}
+
+document.getElementById('admin-login-btn').addEventListener('click', async ()=>{
+  const pw = document.getElementById('admin-pw-input').value;
+  const hash = await hashPW(pw);
+  if(hash === ADMIN_HASH){
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-panel').style.display = '';
+    renderAdminList();
+  } else {
+    document.getElementById('admin-err').textContent = 'パスワードが違います';
+    document.getElementById('admin-pw-input').value = '';
+    document.getElementById('admin-pw-input').focus();
+  }
+});
+
+function renderAdminList(){
+  const proposals = JSON.parse(localStorage.getItem('dameko_proposals') || '[]');
+  const el = document.getElementById('admin-list');
+  if(!proposals.length){
+    el.innerHTML = '<p style="color:var(--muted);font-size:0.82rem;text-align:center;padding:1rem;">まだ企画案はありません</p>';
+    return;
+  }
+  // 未対応を上に
+  const sorted = [...proposals].sort((a,b) => (a.done ? 1 : 0) - (b.done ? 1 : 0));
+  el.innerHTML = sorted.map((p, si)=>{
+    const realIdx = proposals.indexOf(p);
+    const badge = p.done
+      ? `<span style="font-size:0.65rem;background:rgba(0,200,100,0.15);border:1px solid rgba(0,200,100,0.3);color:#4dffaa;border-radius:100px;padding:0.15rem 0.6rem;letter-spacing:0.05em;">✅ 対応済み</span>`
+      : `<span style="font-size:0.65rem;background:rgba(255,45,120,0.12);border:1px solid rgba(255,45,120,0.25);color:var(--pink-soft);border-radius:100px;padding:0.15rem 0.6rem;letter-spacing:0.05em;">🔴 未対応</span>`;
+    const toggleLabel = p.done ? '未対応に戻す' : '対応済みに';
+    const toggleColor = p.done ? 'rgba(255,255,255,0.15)' : 'rgba(0,200,100,0.2)';
+    return `
+    <div style="background:rgba(255,45,120,0.04);border:1px solid ${p.done ? 'rgba(0,200,100,0.15)' : 'rgba(255,45,120,0.12)'};border-radius:8px;padding:0.9rem 1rem;position:relative;transition:border-color 0.3s;">
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;padding-right:3.5rem;">
+        ${badge}
+        <span style="font-size:0.63rem;color:var(--muted);letter-spacing:0.08em;">${p.category} — ${p.name} / ${p.date}</span>
+      </div>
+      <p style="font-size:0.83rem;color:var(--muted);line-height:1.7;padding-right:0.5rem;">${p.content.replace(/\n/g,'<br>')}</p>
+      <div style="display:flex;gap:0.4rem;margin-top:0.7rem;justify-content:flex-end;">
+        <button onclick="toggleStatus(${realIdx})"
+          style="background:${toggleColor};border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--white);font-size:0.68rem;padding:0.25rem 0.7rem;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">${toggleLabel}</button>
+        <button onclick="deleteItem(${realIdx})"
+          style="background:rgba(255,45,120,0.1);border:1px solid rgba(255,45,120,0.2);border-radius:6px;color:var(--pink-soft);font-size:0.68rem;padding:0.25rem 0.7rem;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">削除</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.toggleStatus = function(i){
+  const proposals = JSON.parse(localStorage.getItem('dameko_proposals') || '[]');
+  if(!proposals[i]) return;
+  proposals[i].done = !proposals[i].done;
+  localStorage.setItem('dameko_proposals', JSON.stringify(proposals));
+  renderAdminList();
+  renderProposals();
+};
+
+window.deleteItem = function(i){
+  const proposals = JSON.parse(localStorage.getItem('dameko_proposals') || '[]');
+  proposals.splice(i,1);
+  localStorage.setItem('dameko_proposals', JSON.stringify(proposals));
+  renderAdminList();
+  renderProposals();
+};
+
+window.clearAll = function(){
+  if(!confirm('全件削除しますか？')) return;
+  localStorage.removeItem('dameko_proposals');
+  renderAdminList();
+  renderProposals();
+};
+</script>
+</body>
+</html>
